@@ -41,7 +41,7 @@
 }
 * { box-sizing:border-box; }
 html { -webkit-text-size-adjust:100%; }
-body { margin:0; background:var(--bg); color:var(--text); font:400 16px/1.65 var(--sans); }
+body { margin:0; background:var(--bg); color:var(--text); font:400 16px/1.55 var(--sans); }
 button, input, select, textarea { font:inherit; color:inherit; }
 a { color:var(--plan); }
 :focus-visible { outline:2px solid var(--plan); outline-offset:2px; border-radius:6px; }
@@ -69,10 +69,13 @@ nav.tabs button:hover { color:var(--text); }
   nav.tabs .wrap { padding:0 4px; }
   nav.tabs button { font-size:.72rem; padding:8px 2px 6px; border-bottom:0; border-top:3px solid transparent; }
   nav.tabs button[aria-current="page"] { border-top-color:var(--plan); }
-  main { padding-bottom:calc(var(--tabh) + 24px + env(safe-area-inset-bottom,0px)); }
 }
 
-main { padding-top:24px; padding-bottom:64px; }
+/* main also has .wrap, whose padding shorthand would otherwise win and remove this spacing */
+main.wrap { padding-top:28px; padding-bottom:64px; }
+@media (max-width:700px) {
+  main.wrap { padding-top:16px; padding-bottom:calc(var(--tabh) + 32px + env(safe-area-inset-bottom,0px)); }
+}
 section.view { display:none; }
 section.view.on { display:block; }
 h2 { font:700 1.55rem/1.25 var(--serif); margin:8px 0 6px; }
@@ -112,7 +115,8 @@ h3 { font:700 1.2rem/1.3 var(--serif); margin:28px 0 10px; }
 .day .date b { display:block; font:700 1.7rem/1 var(--serif); }
 .day .date small { color:var(--muted); font-size:.8rem; }
 .day h4 { margin:0 0 6px; font-size:1.05rem; }
-.day .slot { display:grid; grid-template-columns:70px 1fr; gap:8px; font-size:.95rem; }
+.day .slot { display:grid; grid-template-columns:70px 1fr; gap:8px; font-size:.95rem; line-height:1.45; }
+.day .slot + .slot { margin-top:4px; }
 .day .slot span:first-child { color:var(--muted); font-size:.85rem; padding-top:1px; }
 .day .extras { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
 .chip { display:inline-flex; align-items:center; gap:5px; font-size:.82rem; padding:3px 10px; border-radius:999px;
@@ -125,8 +129,9 @@ h3 { font:700 1.2rem/1.3 var(--serif); margin:28px 0 10px; }
 .today-tag { font-size:.75rem; font-weight:700; color:var(--c); }
 
 /* Places */
-.seg { display:inline-flex; background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:3px; margin-bottom:18px; }
-.seg button { border:0; background:none; padding:7px 16px; border-radius:999px; cursor:pointer; color:var(--muted); }
+.seg { display:inline-flex; gap:2px; background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:4px; margin-bottom:20px; }
+.seg button { border:0; background:none; min-height:36px; padding:6px 18px; border-radius:999px; cursor:pointer; color:var(--muted); line-height:1.2; }
+.seg button:hover { color:var(--text); }
 .seg button[aria-pressed="true"] { background:var(--c); color:var(--surface); font-weight:700; }
 .place-hero img { display:block; width:100%; height:auto; border-radius:var(--radius); }
 .place-hero { margin-bottom:16px; }
@@ -138,7 +143,7 @@ h3 { font:700 1.2rem/1.3 var(--serif); margin:28px 0 10px; }
 .sight.flash { box-shadow:0 0 0 2px var(--c); }
 .sight h4 { margin:0 0 4px; font-size:1.02rem; }
 .sight .when { font-size:.8rem; color:var(--c); font-weight:700; }
-.sight p { margin:0 0 8px; font-size:.93rem; }
+.sight p { margin:0 0 8px; font-size:.93rem; line-height:1.5; }
 .sight dl { margin:0; display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:.86rem; }
 .sight dt { color:var(--muted); }
 .sight dd { margin:0; }
@@ -172,9 +177,11 @@ ul.plain li:first-child { border-top:0; }
 .progress { height:8px; background:var(--surface-2); border-radius:4px; overflow:hidden; margin:6px 0 20px; border:1px solid var(--line); }
 .progress span { display:block; height:100%; background:var(--ok); width:0; transition:width .3s; }
 @media (prefers-reduced-motion: reduce) { .progress span { transition:none; } }
-.check { display:flex; gap:12px; align-items:flex-start; padding:9px 0; border-top:1px solid var(--line); cursor:pointer; }
+.check { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-top:1px solid var(--line); cursor:pointer; line-height:1.45; }
+.check:first-child { padding-top:2px; }
+.check:last-child { padding-bottom:2px; }
 .check:first-of-type { border-top:0; }
-.check input { width:20px; height:20px; margin-top:3px; flex:none; accent-color:var(--ok); }
+.check input { width:20px; height:20px; margin:1px 0 0; flex:none; accent-color:var(--ok); }
 .check input:checked + span { color:var(--muted); text-decoration:line-through; }
 .group-count { font-size:.85rem; color:var(--muted); font-weight:400; font-family:var(--sans); margin-left:8px; }
 
@@ -187,6 +194,25 @@ tr:first-child td { border-top:0; }
 td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
 td input.actual { width:96px; text-align:right; padding:5px 8px; border:1px solid var(--line); border-radius:8px; background:var(--surface-2); font-variant-numeric:tabular-nums; }
 tfoot td { font-weight:700; border-top:2px solid var(--line); background:var(--surface-2); }
+td .bnote { display:none; }
+@media (max-width:700px) {
+  /* Budget: fold the notes under each item instead of hiding them off to the side */
+  table.budget { min-width:0; }
+  table.budget .notes-col { display:none; }
+  table.budget td .bnote { display:block; font-size:.8rem; font-weight:400; color:var(--muted); margin-top:2px; line-height:1.4; }
+  table.budget td, table.budget th { padding:10px; }
+  table.budget td input.actual { width:84px; }
+  /* Info tables: one card-like block per row, each value labelled */
+  .tbl.stack table { min-width:0; }
+  .tbl.stack thead { display:none; }
+  .tbl.stack tr, .tbl.stack td { display:block; }
+  .tbl.stack tr { padding:12px 14px; border-top:1px solid var(--line); }
+  .tbl.stack tr:first-child { border-top:0; }
+  .tbl.stack td { padding:1px 0; border:0; }
+  .tbl.stack td:first-child { font-weight:700; margin-bottom:2px; }
+  .tbl.stack td + td { display:grid; grid-template-columns:104px 1fr; gap:8px; }
+  .tbl.stack td + td::before { content:attr(data-label); color:var(--muted); font-size:.82rem; padding-top:1px; }
+}
 
 /* Dialog */
 dialog { border:1px solid var(--line); border-radius:16px; padding:0; width:min(560px,calc(100vw - 24px)); background:var(--surface); color:var(--text); max-height:calc(100vh - 32px); }
@@ -201,10 +227,21 @@ dialog h3 { margin:0 0 14px; }
 .hint { font-size:.8rem; color:var(--muted); margin-top:4px; }
 .toggle { display:flex; gap:10px; align-items:center; margin:4px 0 14px; cursor:pointer; }
 .toggle input { width:20px; height:20px; accent-color:var(--ok); }
+/* Keep Cancel and Save in view while the form scrolls */
+.dlg-actions { position:sticky; bottom:0; background:var(--surface); margin:0 -20px -20px; padding:12px 20px 20px; border-top:1px solid var(--line); }
 .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(24px + env(safe-area-inset-bottom,0px)); background:var(--text); color:var(--bg);
   padding:9px 16px; border-radius:999px; font-size:.9rem; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50; }
 .toast.show { opacity:1; }
 @media (max-width:700px) { .countdown { text-align:left; } .countdown strong { display:inline; font-size:1.05rem; margin-right:6px; } .city-head .muted { flex-basis:100%; padding-left:22px; } .toast { bottom:calc(var(--tabh) + 16px + env(safe-area-inset-bottom,0px)); } .two { grid-template-columns:1fr; } .day { grid-template-columns:48px 1fr; gap:10px; padding:12px; } .day .slot { grid-template-columns:1fr; gap:0; } }
+/* Bigger tap targets on phones and touch screens */
+@media (max-width:700px), (pointer:coarse) {
+  .chip { min-height:32px; padding:4px 12px; }
+  .filters button { min-height:36px; padding:6px 14px; }
+  .btn { min-height:40px; }
+  .btn.small { min-height:36px; padding:6px 13px; }
+  ul.plain li > a:only-child { display:block; margin:-10px 0; padding:10px 0; }
+  .field textarea { min-height:96px; }
+}
 .info-block + .info-block { margin-top:30px; }
 .tips p { margin:0 0 10px; }
 </style>
@@ -249,7 +286,7 @@ dialog h3 { margin:0 0 14px; }
     <label class="field"><span>Details</span><textarea name="notes" placeholder="Paste the confirmation e-mail, ticket text, address, seat numbers…"></textarea>
       <div class="hint">If you leave Link empty, the first web address in the details is used.</div></label>
     <label class="toggle"><input type="checkbox" name="booked"> Booked and confirmed</label>
-    <div class="row">
+    <div class="row dlg-actions">
       <button type="button" class="btn danger small" id="dlg-del">Delete</button>
       <span class="spacer"></span>
       <button type="button" class="btn" id="dlg-cancel">Cancel</button>
@@ -412,6 +449,14 @@ var CHECKS = [
     'A coin purse']]
 ];
 
+// Never edit: the text keys of the items that the old position-based ticks ('c' + group + '-' + item) pointed at.
+var CHECKS_V1 = [
+  ['k1ku1vko', 'ksn0qwv', 'kkwcsxd', 'kqupnd9', 'k17n1hv0', 'k1khvpxs'],
+  ['kz5g4vr', 'k1snrbpl', 'kkyweu7', 'k79511a', 'k4rb70r', 'kt97ln4'],
+  ['k6x9ut8', 'ksftmis', 'k1b95uea', 'k1f43ppt', 'kqtk4b2', 'k10jyf0r', 'k1j1qr4h'],
+  ['k3zy69d', 'kb8ecn1', 'kt4glmx', 'k1ghtyqp', 'k636k2w', 'k1m3on26']
+];
+
 var BUDGET = [
   ['flights', 'Flights Toronto ⇄ Tokyo, economy', 3800, 'About $1,900 each'],
   ['domestic', 'Domestic flights', 700, 'Itami → Naha, Naha → Tokyo'],
@@ -436,7 +481,9 @@ function defaultState() {
 var state;
 try { state = JSON.parse(localStorage.getItem(KEY)); } catch (e) { state = null; }
 if (!state || state.v !== 1 || !Array.isArray(state.bookings)) state = defaultState();
-(function migrate() {
+migrate();
+function migrate() {
+  state.checks = state.checks || {}; state.actual = state.actual || {};
   // Bring untouched suggested bookings in line with the current plan; keep anything you've edited.
   SEED.forEach(function (sd, i) {
     var id = 'seed' + i, b = null;
@@ -446,9 +493,17 @@ if (!state || state.v !== 1 || !Array.isArray(state.bookings)) state = defaultSt
     if (!b.booked && !b.conf && !b.link && !b.notes && !b.time) { b.cat = sd[0]; b.title = sd[1]; b.date = sd[2]; }
   });
   state.seeded = SEED.length;
+  // Ticks saved before November 2026 were keyed by position ('c' + group + '-' + item); move them to text keys.
+  Object.keys(state.checks).forEach(function (k) {
+    var m = /^c(\d+)-(\d+)$/.exec(k); if (!m) return;
+    var nk = (CHECKS_V1[+m[1]] || [])[+m[2]];
+    if (nk && state.checks[k]) state.checks[nk] = true;
+    delete state.checks[k];
+  });
   save();
-})();
-state.checks = state.checks || {}; state.actual = state.actual || {};
+}
+// Checklist ticks are keyed by a hash of the item's text, so adding or reordering items keeps them. Rewording an item resets its tick.
+function checkKey(t) { for (var h = 5381, i = 0; i < t.length; i++) h = (h * 33 + t.charCodeAt(i)) | 0; return 'k' + (h >>> 0).toString(36); }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { toast('Couldn’t save in this browser'); } }
 
 /* ---------- Helpers ---------- */
@@ -486,8 +541,10 @@ $('#tabbar').addEventListener('click', function (e) { var b = e.target.closest('
 
 var currentCity = 'kyoto';
 var ROUTES = { trip: 'trip', tokyo: 'places', kyoto: 'places', okinawa: 'places', places: 'places', bookings: 'bookings', checklist: 'checklist', budget: 'budget', info: 'info' };
+// Always change the address through setHash: sandboxed previews throw on history.replaceState, which once broke the tabs.
+function setHash(name) { try { if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name); } catch (e) {} }
 function go(name, focusId) {
-  if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+  setHash(name);
   show(name, focusId);
 }
 function show(name, focusId) {
@@ -546,8 +603,8 @@ function renderTrip() {
 }
 $('#v-trip').addEventListener('click', function (e) {
   var s = e.target.closest('[data-sight]'), b = e.target.closest('[data-bk]'), a = e.target.closest('[data-add]');
-  if (s) { e.preventDefault(); history.replaceState(null, '', '#' + s.dataset.city); show(s.dataset.city, 'sight-' + s.dataset.sight); }
-  else if (b) { history.replaceState(null, '', '#bookings'); show('bookings', 'bk-' + b.dataset.bk); }
+  if (s) { e.preventDefault(); go(s.dataset.city, 'sight-' + s.dataset.sight); }
+  else if (b) go('bookings', 'bk-' + b.dataset.bk);
   else if (a) openDialog(null, a.dataset.add);
 });
 
@@ -605,7 +662,7 @@ $('#v-bookings').addEventListener('click', function (e) {
   var act = a.dataset.act;
   if (act === 'add') openDialog(null, '');
   else if (act === 'edit') openDialog(a.dataset.id);
-  else if (act === 'day') { history.replaceState(null, '', '#trip'); show('trip', 'day-' + a.dataset.date); }
+  else if (act === 'day') go('trip', 'day-' + a.dataset.date);
   else if (act === 'copy') { var b = find(a.dataset.id); if (b && navigator.clipboard) navigator.clipboard.writeText(b.conf).then(function () { toast('Copied'); }, function () { toast('Couldn’t copy'); }); }
   else if (act === 'export') exportData();
   else if (act === 'import') $('#importfile').click();
@@ -660,8 +717,8 @@ $('#importfile').addEventListener('change', function () {
       var s = JSON.parse(r.result);
       if (!s || s.v !== 1 || !Array.isArray(s.bookings)) throw 0;
       if (!confirm('Replace what’s in this browser with the backup?')) return;
-      state = { v: 1, bookings: s.bookings, checks: s.checks || {}, actual: s.actual || {} };
-      save(); refresh(); toast('Backup restored');
+      state = { v: 1, seeded: s.seeded, bookings: s.bookings, checks: s.checks || {}, actual: s.actual || {} };
+      migrate(); refresh(); toast('Backup restored');
     } catch (e) { toast('That file isn’t a handbook backup'); }
   };
   r.readAsText(f); this.value = '';
@@ -670,34 +727,34 @@ $('#importfile').addEventListener('change', function () {
 /* ---------- Checklist ---------- */
 function renderChecklist() {
   var total = 0, done = 0, html = '';
-  CHECKS.forEach(function (g, gi) { g[1].forEach(function (_, i) { total++; if (state.checks['c' + gi + '-' + i]) done++; }); });
+  CHECKS.forEach(function (g) { g[1].forEach(function (item) { total++; if (state.checks[checkKey(item)]) done++; }); });
   html += '<h2>Checklist</h2><p class="lead">' + done + ' of ' + total + ' done. Book flights and hotels first; the rest can wait until spring.</p>';
   html += '<div class="progress" aria-hidden="true"><span style="width:' + (100 * done / total) + '%"></span></div>';
-  CHECKS.forEach(function (g, gi) {
-    var gd = g[1].filter(function (_, i) { return state.checks['c' + gi + '-' + i]; }).length;
+  CHECKS.forEach(function (g) {
+    var gd = g[1].filter(function (item) { return state.checks[checkKey(item)]; }).length;
     html += '<h3>' + esc(g[0]) + '<span class="group-count">' + gd + ' of ' + g[1].length + '</span></h3><div class="card">';
-    g[1].forEach(function (item, i) { var id = 'c' + gi + '-' + i; html += '<label class="check"><input type="checkbox" data-c="' + id + '"' + (state.checks[id] ? ' checked' : '') + '><span>' + esc(item) + '</span></label>'; });
+    g[1].forEach(function (item) { var id = checkKey(item); html += '<label class="check"><input type="checkbox" data-c="' + id + '"' + (state.checks[id] ? ' checked' : '') + '><span>' + esc(item) + '</span></label>'; });
     html += '</div>';
   });
   $('#v-checklist').innerHTML = html;
 }
-$('#v-checklist').addEventListener('change', function (e) { var c = e.target.dataset.c; if (!c) return; state.checks[c] = e.target.checked; save(); renderChecklist(); });
+$('#v-checklist').addEventListener('change', function (e) { var c = e.target.dataset.c; if (!c) return; if (e.target.checked) state.checks[c] = true; else delete state.checks[c]; save(); renderChecklist(); });
 
 /* ---------- Budget ---------- */
 function renderBudget() {
   var est = 0, act = 0, html = '';
   html += '<h2>Budget</h2><p class="lead">Estimates in CAD for two, at ¥110 = $1. Type what you actually paid as you book, and the totals update.</p>';
-  html += '<div class="tbl"><table><thead><tr><th>Item</th><th class="num">Estimate</th><th class="num">Actual</th><th>Notes</th></tr></thead><tbody>';
+  html += '<div class="tbl"><table class="budget"><thead><tr><th>Item</th><th class="num">Estimate</th><th class="num">Actual</th><th class="notes-col">Notes</th></tr></thead><tbody>';
   BUDGET.forEach(function (r) {
     est += r[2]; var a = state.actual[r[0]]; if (a !== undefined && a !== '') act += +a; else act += r[2];
-    html += '<tr><td>' + esc(r[1]) + '</td><td class="num">' + money(r[2]) + '</td><td class="num"><input class="actual" inputmode="decimal" data-b="' + r[0] + '" value="' + (a !== undefined ? esc(a) : '') + '" placeholder="—" aria-label="Actual for ' + esc(r[1]) + '"></td><td class="muted">' + esc(r[3]) + '</td></tr>';
+    html += '<tr><td>' + esc(r[1]) + '<div class="bnote">' + esc(r[3]) + '</div></td><td class="num">' + money(r[2]) + '</td><td class="num"><input class="actual" inputmode="decimal" data-b="' + r[0] + '" value="' + (a !== undefined ? esc(a) : '') + '" placeholder="—" aria-label="Actual for ' + esc(r[1]) + '"></td><td class="muted notes-col">' + esc(r[3]) + '</td></tr>';
   });
-  html += '</tbody><tfoot><tr><td>Total</td><td class="num">' + money(est) + '</td><td class="num" id="acttotal">' + money(act) + '</td><td class="muted" id="actnote"></td></tr></tfoot></table></div>';
+  html += '</tbody><tfoot><tr><td>Total<div class="bnote" id="actnote-m"></div></td><td class="num">' + money(est) + '</td><td class="num" id="acttotal">' + money(act) + '</td><td class="muted notes-col" id="actnote"></td></tr></tfoot></table></div>';
   html += '<p class="muted" style="margin-top:12px">The actual total counts the estimate for any line you haven’t filled in yet. To trim: shopping first, then Hyatt Regency Seragaki Island instead of Halekulani saves about $2,200.</p>';
   $('#v-budget').innerHTML = html;
   budgetNote(est, act);
 }
-function budgetNote(est, act) { var d = act - est; $('#actnote').textContent = d === 0 ? 'On estimate' : (d > 0 ? money(d) + ' over' : money(-d) + ' under'); }
+function budgetNote(est, act) { var d = act - est; $('#actnote').textContent = $('#actnote-m').textContent = d === 0 ? 'On estimate' : (d > 0 ? money(d) + ' over' : money(-d) + ' under'); }
 $('#v-budget').addEventListener('input', function (e) {
   var k = e.target.dataset.b; if (!k) return;
   var v = e.target.value.replace(/[^0-9.]/g, ''); if (v === '') delete state.actual[k]; else state.actual[k] = v;
@@ -708,8 +765,8 @@ $('#v-budget').addEventListener('input', function (e) {
 
 /* ---------- Info ---------- */
 function table(head, rows) {
-  return '<div class="tbl"><table><thead><tr>' + head.map(function (h) { return '<th>' + esc(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-    rows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + esc(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+  return '<div class="tbl stack"><table><thead><tr>' + head.map(function (h) { return '<th>' + esc(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    rows.map(function (r) { return '<tr>' + r.map(function (c, i) { return '<td data-label="' + esc(head[i]) + '">' + esc(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
 }
 function renderInfo() {
   var html = '<h2>Good to know</h2><p class="lead">Transport, backup hotels, weather and etiquette in one place.</p>';
